@@ -262,7 +262,7 @@ const intransitiveVerbs = [
  * a random adjective instead. This adjective has `adjective.adjective` as both
  * singular and plural forms of the noun. In this case, the returned object has
  * in its `wordType` field `"noun"`.
- * 
+ *
  * @returns A random word object with `wordType` as noun
  */
 const getNoun = () => {
@@ -283,8 +283,8 @@ const getNoun = () => {
 
 /**
  * Gets a random adjective from the list.
- * 
- * @returns A random adjective object. 
+ *
+ * @returns A random adjective object.
  */
 const getAdjective = () => adjectives.random();
 
@@ -293,8 +293,8 @@ const getAdjective = () => adjectives.random();
  * calling the `getNoun()` function instead. When it does, it takes either the
  * singular or plural form of the noun and adds that value to the `firstName`
  * field of the returned object.
- * 
- * @returns A word object with its `wordType` field set to `"firstName"`. 
+ *
+ * @returns A word object with its `wordType` field set to `"firstName"`.
  */
 const getFirstName = () => {
 	const probability = getRandomInt(0, 100);
@@ -316,8 +316,8 @@ const getFirstName = () => {
  * calling the `getNoun()` function instead. When it does, it takes either the
  * singular or plural form of the noun and adds that value to the `lastName`
  * field of the returned object.
- * 
- * @returns A word object with its `wordType` field set to `"lastName"`. 
+ *
+ * @returns A word object with its `wordType` field set to `"lastName"`.
  */
 const getLastName = () => {
 	const probability = getRandomInt(0, 100);
@@ -336,23 +336,23 @@ const getLastName = () => {
 
 /**
  * Gets a random transitive verb from the list.
- * 
+ *
  * @returns A random transitive verb from `transitiveVerbs`.
  */
 const getTransitiveVerb = () => transitiveVerbs.random();
 
 /**
  * Gets a random intransitive verb from the list.
- * 
+ *
  * @returns A random intransitive verb from `intransitiveVerbs`.
  */
 const getIntransitiveVerb = () => intransitiveVerbs.random();
 
 /**
  * Generates a random band name.
- * 
+ *
  * The generator operates by taking a random noun and building off of it.
- * 
+ *
  * @returns A randomly generated band name.
  */
 const generateName = () => {
@@ -362,10 +362,40 @@ const generateName = () => {
 	name.push(getNoun());
 
 	//Modify it in random ways
+	while (true) {
+		let probability = getRandomInt(0, 100);
+
+		if (probability < 10) {
+			//The modification process has a 10% chance of not doing anything.
+			break;
+		} else if (probability < 60) {
+            //The modification process has a 50% chance of adding an adjective.
+            //If it does, it repeats this loop.
+            name.unshift(getAdjective());
+            console.log(name);
+		} else {
+            //The modification process has a 40% chance of adding "the" and
+            //breaking.
+            name.unshift("The");
+
+            let lastNoun = name.findLastIndex((element) => element.wordType === "noun");
+            name[lastNoun] = name[lastNoun].plural;
+
+            console.log(name);
+
+            break; 
+        }
+	}
 
 	//Concatenate the elements in name
 	return name.reduce((fullName, currentElement) => {
-		return (fullName = fullName.concat(currentElement.singular));
+		if(typeof currentElement === "string") {
+            return fullName + currentElement + " ";
+        } else if(currentElement.wordType === "noun") {
+            return fullName + currentElement.singular + " ";
+        } else {
+            return fullName + currentElement[currentElement.wordType] + " ";
+        }
 	}, "");
 };
 
