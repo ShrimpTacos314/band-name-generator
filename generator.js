@@ -15,8 +15,30 @@ const getRandomInt = (min, max) =>
  *
  * @returns A random element from this array.
  */
-Array.prototype.random = function () {
-	return this[getRandomInt(0, this.length)];
+const randomFromArray = (arr) => {
+	return arr[getRandomInt(0, arr.length)];
+};
+
+const capitalize = (str) => {
+	const strings = str.split(" ");
+
+	if (strings.length === 0) {
+		return "";
+	}
+
+	let toReturn =
+		strings[0].substring(0, 1).toUpperCase() +
+		strings[0].substring(1).toLowerCase();
+
+	for (let i = 1; i < strings.length; i++) {
+		toReturn =
+			toReturn +
+			" " +
+			strings[i].substring(0, 1).toUpperCase() +
+			strings[i].substring(1).toLowerCase();
+	}
+
+	return toReturn;
 };
 
 /**
@@ -277,7 +299,7 @@ const getNoun = () => {
 			plural: adjective.adjective,
 		};
 	} else {
-		return nouns.random();
+		return randomFromArray(nouns);
 	}
 };
 
@@ -286,7 +308,7 @@ const getNoun = () => {
  *
  * @returns A random adjective object.
  */
-const getAdjective = () => adjectives.random();
+const getAdjective = () => randomFromArray(adjectives);
 
 /**
  * Gets a random first name from the list. This function has a 3% chance of
@@ -307,7 +329,7 @@ const getFirstName = () => {
 			firstName: probability > 90 ? noun.plural : noun.singular,
 		};
 	} else {
-		return firstNames.random();
+		return randomFromArray(firstNames);
 	}
 };
 
@@ -330,7 +352,7 @@ const getLastName = () => {
 			lastName: probability > 90 ? noun.plural : noun.singular,
 		};
 	} else {
-		return lastNames.random();
+		return randomFromArray(lastNames);
 	}
 };
 
@@ -339,14 +361,14 @@ const getLastName = () => {
  *
  * @returns A random transitive verb from `transitiveVerbs`.
  */
-const getTransitiveVerb = () => transitiveVerbs.random();
+const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
 
 /**
  * Gets a random intransitive verb from the list.
  *
  * @returns A random intransitive verb from `intransitiveVerbs`.
  */
-const getIntransitiveVerb = () => intransitiveVerbs.random();
+const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
 
 /**
  * Generates a random band name.
@@ -369,33 +391,39 @@ const generateName = () => {
 			//The modification process has a 10% chance of not doing anything.
 			break;
 		} else if (probability < 60) {
-            //The modification process has a 50% chance of adding an adjective.
-            //If it does, it repeats this loop.
-            name.unshift(getAdjective());
-            console.log(name);
+			//The modification process has a 50% chance of adding an adjective.
+			//If it does, it repeats this loop.
+			name.unshift(getAdjective());
+			console.log(name);
 		} else {
-            //The modification process has a 40% chance of adding "the" and
-            //breaking.
-            name.unshift("The");
+			//The modification process has a 40% chance of adding "the" and
+			//breaking.
+			name.unshift("The");
 
-            let lastNoun = name.findLastIndex((element) => element.wordType === "noun");
-            name[lastNoun] = name[lastNoun].plural;
+			let lastNoun = name.findLastIndex(
+				(element) => element.wordType === "noun"
+			);
+			name[lastNoun] = name[lastNoun].plural;
 
-            console.log(name);
+			console.log(name);
 
-            break; 
-        }
+			break;
+		}
 	}
 
 	//Concatenate the elements in name
 	return name.reduce((fullName, currentElement) => {
-		if(typeof currentElement === "string") {
-            return fullName + currentElement + " ";
-        } else if(currentElement.wordType === "noun") {
-            return fullName + currentElement.singular + " ";
-        } else {
-            return fullName + currentElement[currentElement.wordType] + " ";
-        }
+		if (typeof currentElement === "string") {
+			return fullName + capitalize(currentElement) + " ";
+		} else if (currentElement.wordType === "noun") {
+			return fullName + capitalize(currentElement.singular) + " ";
+		} else {
+			return (
+				fullName +
+				capitalize(currentElement[currentElement.wordType]) +
+				" "
+			);
+		}
 	}, "");
 };
 
