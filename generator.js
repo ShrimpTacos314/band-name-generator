@@ -13,12 +13,31 @@ const getRandomInt = (min, max) =>
 /**
  * Returns a random element from the array.
  *
+ * @param arr  An array to take an element from.
  * @returns A random element from this array.
  */
 const randomFromArray = (arr) => {
 	return arr[getRandomInt(0, arr.length)];
 };
 
+/**
+ * Takes a string and properly capitalizes the individual words in it. This
+ * function treats each sequence of characters separated by a space (`\u0020`)
+ * as a word. It also defines properly capitalized words as words where the
+ * first letter is uppercase while all after it are lowercase. This method
+ * preserves whitespace in its original order and quantity.
+ *
+ * Examples:
+ * ```
+ * capitalize("depeche mode") returns "Depeche Mode"
+ * capitalize("THIS IS EXAMPLE") returns "This Is Example"
+ * capitalize("   bAnAnA   pUdDiNg   ") returns "   Banana   Pudding   "
+ * capitalize("γεια σου φιλε") returns "Γεια Σου Φιλε"
+ * ```
+ *
+ * @param str The string to capitalize.
+ * @return The string `str` with the first letter of each word uppercased.
+ */
 const capitalize = (str) => {
 	const strings = str.split(" ");
 
@@ -369,6 +388,191 @@ const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
  * @returns A random intransitive verb from `intransitiveVerbs`.
  */
 const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
+
+/**
+ * A list of consonants for the random word generator.
+ */
+const consonants = [
+	`b`,
+	`c`,
+	`d`,
+	`f`,
+	`g`,
+	`h`,
+	`j`,
+	`k`,
+	`l`,
+	`m`,
+	`n`,
+	`p`,
+	`qu`,
+	`r`,
+	`s`,
+	`t`,
+	`v`,
+	`w`,
+	`x`,
+	`y`,
+	`z`,
+];
+
+const startConsonants = [
+	`b`,
+	`bl`,
+	`br`,
+	`c`,
+	`ch`,
+	`cl`,
+	`cr`,
+	`d`,
+	`dr`,
+	`f`,
+	`fl`,
+	`fr`,
+	`g`,
+	`gh`,
+	`gl`,
+	`gr`,
+	`h`,
+	`j`,
+	`k`,
+	`kh`,
+	`kr`,
+	`l`,
+	`ll`,
+	`m`,
+	`mn`,
+	`n`,
+	`p`,
+	`pl`,
+	`pn`,
+	`pr`,
+	`ps`,
+	`qu`,
+	`r`,
+	`rh`,
+	`s`,
+	`sc`,
+	`sh`,
+	`sk`,
+	`sl`,
+	`sm`,
+	`sn`,
+	`sp`,
+	`squ`,
+	`st`,
+	`sw`,
+	`t`,
+	`th`,
+	`tw`,
+	`v`,
+	`w`,
+	`wh`,
+	`wr`,
+	`x`,
+	`y`,
+	`z`,
+];
+
+const endConsonants = [
+	`b`,
+	`bb`,
+	`ble`,
+	`bre`,
+	`c`,
+	`ch`,
+	`ct`,
+	`d`,
+	`dd`,
+	`dge`,
+	`f`,
+	`ff`,
+	`g`,
+	`gg`,
+	`h`,
+	`hm`,
+	`j`,
+	`k`,
+	`ck`,
+	`kh`,
+	`l`,
+	`ll`,
+	`m`,
+	`mm`,
+	`n`,
+	`nn`,
+	`p`,
+	`ph`,
+	`r`,
+	`rr`,
+	`s`,
+	`sh`,
+	`sm`,
+	`sp`,
+	`ss`,
+	`st`,
+	`t`,
+	`th`,
+	`tt`,
+	`v`,
+	`w`,
+	`x`,
+	`y`,
+	`z`
+];
+
+/**
+ * A list of vowels for the random word generator.
+ */
+const vowels = [
+	`a`,
+	`ae`,
+	`ai`,
+	`au`,
+	`e`,
+	`ea`,
+	`ee`,
+	`ei`,
+	`eu`,
+	`i`,
+	`ie`,
+	`o`,
+	`oa`,
+	`oe`,
+	`oi`,
+	`oo`,
+	`ou`,
+	`u`,
+	`ue`,
+	`y`,
+];
+
+const generateWord = () => {
+	let syllableGenerationChance = 100;
+	let toReturn = "";
+
+	//Each time a syllable is generated, the chance of generating another lowers
+	//by some percent (starting at 100%).
+	while(getRandomInt(0, 100) < syllableGenerationChance) {
+		//Has a 66% chance of adding a consonant to the beginning of the
+		//syllable.
+		if(getRandomInt(0, 4) > 1) {
+			toReturn += randomFromArray(startConsonants);
+		}
+
+		//Adds a vowel always.
+		toReturn += randomFromArray(vowels);
+
+		//Has a 66% chance of adding a consonant to the end of the syllable.
+		if(getRandomInt(0, 4) > 1) {
+			toReturn += randomFromArray(endConsonants);
+		}
+
+		syllableGenerationChance *= Math.random();
+	}
+
+	return toReturn;
+};
 
 /**
  * Generates a random band name.
