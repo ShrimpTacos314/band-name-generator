@@ -547,6 +547,16 @@ const vowels = [
 	`y`,
 ];
 
+//There are two problems with the random word generator. One is that it tends to
+//insert unusual letter blends too frequently. The second is that it often fails
+//to take into account the previous syllable's ending in formatting the next.
+//The second problem is solved by tweaking the percentages based off of the
+//ending of the previous syllable. The first is more complicated: it seems we
+//will have to associate a probability with each value and take that probability
+//into consideration.
+//On that note, what if I tried something like having the more common blends at
+//the front of the list and selected the element using a pointer randomly (and
+//in some sort of gradually decreasing probability) moving forward?
 const generateWord = () => {
 	let syllableGenerationChance = 100;
 	let toReturn = "";
@@ -554,9 +564,17 @@ const generateWord = () => {
 	//Each time a syllable is generated, the chance of generating another lowers
 	//by some percent (starting at 100%).
 	while(getRandomInt(0, 100) < syllableGenerationChance) {
-		//Has a 66% chance of adding a consonant to the beginning of the
-		//syllable.
-		if(getRandomInt(0, 4) > 1) {
+		let consonantProbability;
+
+		//If the word ends in a vowel, add a consonant 80% of the time;
+		//otherwise, add a consonant 20% of the time.
+		if(toReturn.search(/.*[aeiou]$/) > -1 || toReturn.length === 0) {
+			consonantProbability = 1;
+		} else {
+			consonantProbability = 4;
+		}
+
+		if(getRandomInt(0, 5) >= consonantProbability) {
 			toReturn += randomFromArray(startConsonants);
 		}
 
