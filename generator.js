@@ -16,21 +16,19 @@ const getRandomInt = (min, max) =>
  * @param arr  An array to take an element from.
  * @returns A random element from this array.
  */
-const randomFromArray = (arr) => {
-	return arr[getRandomInt(0, arr.length)];
-};
+const randomFromArray = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 /**
  * Takes a string and properly capitalizes the individual words in it. This
- * function treats each sequence of characters separated by a space (`\u0020`)
- * as a word. It also defines properly capitalized words as words where the
- * first letter is uppercase while all after it are lowercase. This method
- * preserves whitespace in its original order and quantity.
+ * function treats each sequence of characters separated by a whitespace as a 
+ * word. It also defines properly capitalized words as words where the first
+ * letter is uppercase while all after it are lowercase. This method preserves
+ * whitespace in its original order and quantity.
  *
  * Examples:
  * ```
  * capitalize("depeche mode") returns "Depeche Mode"
- * capitalize("THIS IS EXAMPLE") returns "This Is Example"
+ * capitalize("THIS IS SPARTA") returns "This Is Sparta"
  * capitalize("   bAnAnA   pUdDiNg   ") returns "   Banana   Pudding   "
  * capitalize("γεια σου φιλε") returns "Γεια Σου Φιλε"
  * ```
@@ -39,7 +37,7 @@ const randomFromArray = (arr) => {
  * @return The string `str` with the first letter of each word uppercased.
  */
 const capitalize = (str) => {
-	const strings = str.split(" ");
+	const strings = str.split(/\s/);
 
 	if (strings.length === 0) {
 		return "";
@@ -55,6 +53,180 @@ const capitalize = (str) => {
 			" " +
 			strings[i].substring(0, 1).toUpperCase() +
 			strings[i].substring(1).toLowerCase();
+	}
+
+	return toReturn;
+};
+
+/**
+ * A list of consonants beginning a word for the random word generator.
+ */
+const startConsonants = [
+	`b`,
+	`bl`,
+	`br`,
+	`c`,
+	`ch`,
+	`cl`,
+	`cr`,
+	`d`,
+	`dr`,
+	`f`,
+	`fl`,
+	`fr`,
+	`g`,
+	`gl`,
+	`gr`,
+	`h`,
+	`j`,
+	`k`,
+	`l`,
+	`m`,
+	`n`,
+	`p`,
+	`pl`,
+	`pr`,
+	`qu`,
+	`r`,
+	`s`,
+	`sc`,
+	`sh`,
+	`sk`,
+	`sl`,
+	`sm`,
+	`sn`,
+	`sp`,
+	`squ`,
+	`st`,
+	`sw`,
+	`t`,
+	`th`,
+	`tw`,
+	`v`,
+	`w`,
+	`wh`,
+	`x`,
+	`y`,
+	`z`,
+];
+
+/**
+ * A list of consonants ending a word for the random word generator.
+ */
+const endConsonants = [
+	`b`,
+	`bb`,
+	`ble`,
+	`bre`,
+	`c`,
+	`ch`,
+	`ct`,
+	`d`,
+	`dd`,
+	`dge`,
+	`f`,
+	`ff`,
+	`g`,
+	`gg`,
+	`h`,
+	`j`,
+	`k`,
+	`ck`,
+	`l`,
+	`ll`,
+	`m`,
+	`mm`,
+	`n`,
+	`nn`,
+	`p`,
+	`ph`,
+	`r`,
+	`rr`,
+	`s`,
+	`sh`,
+	`sm`,
+	`sp`,
+	`ss`,
+	`st`,
+	`t`,
+	`th`,
+	`tt`,
+	`v`,
+	`w`,
+	`x`,
+	`y`,
+	`z`,
+];
+
+/**
+ * A list of vowels for the random word generator.
+ */
+const vowels = [
+	`a`,
+	`ae`,
+	`ai`,
+	`e`,
+	`ea`,
+	`ee`,
+	`ei`,
+	`i`,
+	`ie`,
+	`o`,
+	`oa`,
+	`oi`,
+	`oo`,
+	`ou`,
+	`u`,
+	`y`,
+];
+
+/**
+ * Generates a random word. Fundamentally, the generator creates a syllable by
+ * taking a random consonant or consonant blend from `startConsonants`, then a
+ * random vowel or vowel blend from `vowels`, then a random consonant or blend
+ * from `endConsonants`. The generator creates randomly many syllables, but
+ * favors words between three and eight characters.
+ * 
+ * @returns A random nonsense word.
+ */
+const generateWord = () => {
+	let syllableGenerationChance = 1;
+	let toReturn = "";
+
+	//Each time a syllable is generated, the chance of generating another lowers
+	//by some percent (starting at 100%).
+	while (Math.random() < syllableGenerationChance) {
+		let consonantProbability;
+
+		//If the word ends in a vowel, add a consonant 80% of the time;
+		//otherwise, add a consonant 20% of the time.
+		if (toReturn.search(/.*[aeiouy]$/) > -1 || toReturn.length === 0) {
+			consonantProbability = 0.8;
+		} else {
+			consonantProbability = 0.2;
+		}
+
+		if (Math.random() <= consonantProbability) {
+			toReturn += randomFromArray(startConsonants);
+		}
+
+		//Adds a vowel always.
+		toReturn += randomFromArray(vowels);
+
+		//Has a 66% chance of adding a consonant to the end of the syllable.
+		if (Math.random() > 0.66) {
+			toReturn += randomFromArray(endConsonants);
+		}
+
+		const minimumSafeLength = 3;
+		const maximumSafeLength = 8;
+		if (toReturn.length < minimumSafeLength) {
+			syllableGenerationChance *= Math.random() * 1.3;
+		} else if (toReturn > maximumSafeLength) {
+			syllableGenerationChance *= Math.random() * 0.7;
+		} else {
+			syllableGenerationChance *= Math.random();
+		}
 	}
 
 	return toReturn;
@@ -299,24 +471,36 @@ const intransitiveVerbs = [
 ];
 
 /**
- * Gets a random noun from the list. This function has a 3% chance of returning
- * a random adjective instead. This adjective has `adjective.adjective` as both
- * singular and plural forms of the noun. In this case, the returned object has
- * in its `wordType` field `"noun"`.
+ * Gets a random noun from the list.
+ * 
+ * This function has a 3% chance of returning a random adjective instead. This
+ * adjective has `adjective.adjective` as both singular and plural forms of the
+ * noun. In this case, the returned object has in its `wordType` field `"noun"`.
+ * In addition, this function has a 3% chance of returning a random generated
+ * word. This word takes on the singular form, and it also has an `"s"` appended
+ * to it to make the plural form. As above, the returned object's `wordType` is
+ * `"noun"`.
  *
  * @returns A random word object with `wordType` as noun
  */
 const getNoun = () => {
-	const probability = getRandomInt(0, 100);
+	const probability = Math.random();
 
 	//getNoun has a 3% chance of returning a random adjective.
-	if (probability < 3) {
+	if (probability < 0.03) {
 		const adjective = getAdjective();
 		return {
 			wordType: "noun",
 			singular: adjective.adjective,
 			plural: adjective.adjective,
 		};
+	} else if(probability < 0.06) {
+		const word = generateWord();
+		return {
+			wordType: "noun",
+			singular: word,
+			plural: word + "s"
+		}
 	} else {
 		return randomFromArray(nouns);
 	}
@@ -324,10 +508,26 @@ const getNoun = () => {
 
 /**
  * Gets a random adjective from the list.
+ * 
+ * This function has a 3% chance of returning a generated word instead. This
+ * word fills the `adjective` property, and the object's `wordType` is
+ * `"adjective"`.
  *
- * @returns A random adjective object.
+ * @returns A random word object with its `wordType` property as `"adjective"`.
  */
-const getAdjective = () => randomFromArray(adjectives);
+const getAdjective = () => {
+	const probability = Math.random();
+
+	if(probability < 0.03) {
+		const word = generateWord();
+		return {
+			wordType: "adjective",
+			adjective: word
+		}
+	} else {
+		return randomFromArray(adjectives);
+	}
+};
 
 /**
  * Gets a random first name from the list. This function has a 3% chance of
@@ -338,9 +538,9 @@ const getAdjective = () => randomFromArray(adjectives);
  * @returns A word object with its `wordType` field set to `"firstName"`.
  */
 const getFirstName = () => {
-	const probability = getRandomInt(0, 100);
+	const probability = Math.random();
 
-	if (probability < 3) {
+	if (probability < 0.03) {
 		const noun = getNoun();
 
 		return {
@@ -361,9 +561,9 @@ const getFirstName = () => {
  * @returns A word object with its `wordType` field set to `"lastName"`.
  */
 const getLastName = () => {
-	const probability = getRandomInt(0, 100);
+	const probability = Math.random();
 
-	if (probability < 3) {
+	if (probability < 0.03) {
 		const noun = getNoun();
 
 		return {
@@ -390,209 +590,6 @@ const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
 const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
 
 /**
- * A list of consonants for the random word generator.
- */
-const consonants = [
-	`b`,
-	`c`,
-	`d`,
-	`f`,
-	`g`,
-	`h`,
-	`j`,
-	`k`,
-	`l`,
-	`m`,
-	`n`,
-	`p`,
-	`qu`,
-	`r`,
-	`s`,
-	`t`,
-	`v`,
-	`w`,
-	`x`,
-	`y`,
-	`z`,
-];
-
-const startConsonants = [
-	`b`,
-	`bl`,
-	`br`,
-	`c`,
-	`ch`,
-	`cl`,
-	`cr`,
-	`d`,
-	`dr`,
-	`f`,
-	`fl`,
-	`fr`,
-	`g`,
-	`gh`,
-	`gl`,
-	`gr`,
-	`h`,
-	`j`,
-	`k`,
-	`kh`,
-	`kr`,
-	`l`,
-	`ll`,
-	`m`,
-	`mn`,
-	`n`,
-	`p`,
-	`pl`,
-	`pn`,
-	`pr`,
-	`ps`,
-	`qu`,
-	`r`,
-	`rh`,
-	`s`,
-	`sc`,
-	`sh`,
-	`sk`,
-	`sl`,
-	`sm`,
-	`sn`,
-	`sp`,
-	`squ`,
-	`st`,
-	`sw`,
-	`t`,
-	`th`,
-	`tw`,
-	`v`,
-	`w`,
-	`wh`,
-	`wr`,
-	`x`,
-	`y`,
-	`z`,
-];
-
-const endConsonants = [
-	`b`,
-	`bb`,
-	`ble`,
-	`bre`,
-	`c`,
-	`ch`,
-	`ct`,
-	`d`,
-	`dd`,
-	`dge`,
-	`f`,
-	`ff`,
-	`g`,
-	`gg`,
-	`h`,
-	`hm`,
-	`j`,
-	`k`,
-	`ck`,
-	`kh`,
-	`l`,
-	`ll`,
-	`m`,
-	`mm`,
-	`n`,
-	`nn`,
-	`p`,
-	`ph`,
-	`r`,
-	`rr`,
-	`s`,
-	`sh`,
-	`sm`,
-	`sp`,
-	`ss`,
-	`st`,
-	`t`,
-	`th`,
-	`tt`,
-	`v`,
-	`w`,
-	`x`,
-	`y`,
-	`z`
-];
-
-/**
- * A list of vowels for the random word generator.
- */
-const vowels = [
-	`a`,
-	`ae`,
-	`ai`,
-	`au`,
-	`e`,
-	`ea`,
-	`ee`,
-	`ei`,
-	`eu`,
-	`i`,
-	`ie`,
-	`o`,
-	`oa`,
-	`oe`,
-	`oi`,
-	`oo`,
-	`ou`,
-	`u`,
-	`ue`,
-	`y`,
-];
-
-//There are two problems with the random word generator. One is that it tends to
-//insert unusual letter blends too frequently. The second is that it often fails
-//to take into account the previous syllable's ending in formatting the next.
-//The second problem is solved by tweaking the percentages based off of the
-//ending of the previous syllable. The first is more complicated: it seems we
-//will have to associate a probability with each value and take that probability
-//into consideration.
-//On that note, what if I tried something like having the more common blends at
-//the front of the list and selected the element using a pointer randomly (and
-//in some sort of gradually decreasing probability) moving forward?
-const generateWord = () => {
-	let syllableGenerationChance = 100;
-	let toReturn = "";
-
-	//Each time a syllable is generated, the chance of generating another lowers
-	//by some percent (starting at 100%).
-	while(getRandomInt(0, 100) < syllableGenerationChance) {
-		let consonantProbability;
-
-		//If the word ends in a vowel, add a consonant 80% of the time;
-		//otherwise, add a consonant 20% of the time.
-		if(toReturn.search(/.*[aeiou]$/) > -1 || toReturn.length === 0) {
-			consonantProbability = 1;
-		} else {
-			consonantProbability = 4;
-		}
-
-		if(getRandomInt(0, 5) >= consonantProbability) {
-			toReturn += randomFromArray(startConsonants);
-		}
-
-		//Adds a vowel always.
-		toReturn += randomFromArray(vowels);
-
-		//Has a 66% chance of adding a consonant to the end of the syllable.
-		if(getRandomInt(0, 4) > 1) {
-			toReturn += randomFromArray(endConsonants);
-		}
-
-		syllableGenerationChance *= Math.random();
-	}
-
-	return toReturn;
-};
-
-/**
  * Generates a random band name.
  *
  * The generator operates by taking a random noun and building off of it.
@@ -607,12 +604,12 @@ const generateName = () => {
 
 	//Modify it in random ways
 	while (true) {
-		let probability = getRandomInt(0, 100);
+		let probability = Math.random();
 
-		if (probability < 10) {
+		if (probability < 0.1) {
 			//The modification process has a 10% chance of not doing anything.
 			break;
-		} else if (probability < 60) {
+		} else if (probability < 0.6) {
 			//The modification process has a 50% chance of adding an adjective.
 			//If it does, it repeats this loop.
 			name.unshift(getAdjective());
