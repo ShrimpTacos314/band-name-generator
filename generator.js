@@ -519,7 +519,7 @@ const getAdjective = () => {
 	const probability = Math.random();
 
 	if(probability < 0.03) {
-		const word = generateWord();
+		const word = getNoun();
 		return {
 			wordType: "adjective",
 			adjective: word
