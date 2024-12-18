@@ -1,24 +1,4 @@
 /**
- * Generates a random integer between `min` (inclusive) and `max` (exclusive).
- *
- * @param {*} min An integer representing the minimum value this function can
- * return, inclusive.
- * @param {*} max An integer representing the maximum value this function can
- * return, exclusive.
- * @returns An integer between `min` (inclusive) and `max` (exclusive).
- */
-const getRandomInt = (min, max) =>
-	Math.floor(Math.random() * (max - min) + min);
-
-/**
- * Returns a random element from the array.
- *
- * @param arr  An array to take an element from.
- * @returns A random element from this array.
- */
-const randomFromArray = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-/**
  * Takes a string and properly capitalizes the individual words in it. This
  * function treats each sequence of characters separated by a whitespace as a 
  * word. It also defines properly capitalized words as words where the first
