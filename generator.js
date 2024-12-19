@@ -45,6 +45,147 @@ What parts of speech would I need?
   Blink-182 (?) and Haircut 100.
 */
 
+class Article {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Subject {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Object {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class TraansitiveVerb {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class IntransitiveVerb {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Adjective {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Conjunction {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Number {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Adverb {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class FirstName {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class LastName {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Place {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class Preposition {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+class CollectiveNoun {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+
+	}
+}
+
+
 /**
  * Takes a string and properly capitalizes the individual words in it. This
  * function treats each sequence of characters separated by a whitespace as a 
@@ -511,17 +652,16 @@ const intransitiveVerbs = [
  * @returns A random word object with `wordType` as noun
  */
 const getNoun = () => {
-	const probability = Math.random();
+	const probability = getWeightedRandomInt(0.03, 0.03, 0.94);
 
-	//getNoun has a 3% chance of returning a random adjective.
-	if (probability < 0.03) {
+	if (probability === 0) {
 		const adjective = getAdjective();
 		return {
 			wordType: "noun",
 			singular: adjective.adjective,
 			plural: adjective.adjective,
 		};
-	} else if(probability < 0.06) {
+	} else if(probability === 1) {
 		const word = generateWord();
 		return {
 			wordType: "noun",
@@ -543,13 +683,13 @@ const getNoun = () => {
  * @returns A random word object with its `wordType` property as `"adjective"`.
  */
 const getAdjective = () => {
-	const probability = Math.random();
+	const probability = getWeightedRandomInt(0.03, 0.97);
 
-	if(probability < 0.03) {
+	if(probability === 0) {
 		const word = getNoun();
 		return {
 			wordType: "adjective",
-			adjective: word
+			adjective: word.singular
 		}
 	} else {
 		return randomFromArray(adjectives);
@@ -565,14 +705,14 @@ const getAdjective = () => {
  * @returns A word object with its `wordType` field set to `"firstName"`.
  */
 const getFirstName = () => {
-	const probability = Math.random();
+	const probability = getWeightedRandomInt(0.03, 0.97);
 
-	if (probability < 0.03) {
+	if (probability === 0) {
 		const noun = getNoun();
 
 		return {
 			wordType: "firstName",
-			firstName: probability > 90 ? noun.plural : noun.singular,
+			firstName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
 		};
 	} else {
 		return randomFromArray(firstNames);
@@ -588,14 +728,14 @@ const getFirstName = () => {
  * @returns A word object with its `wordType` field set to `"lastName"`.
  */
 const getLastName = () => {
-	const probability = Math.random();
+	const probability = getWeightedRandomInt(0.03, 0.97);
 
-	if (probability < 0.03) {
+	if (probability === 0) {
 		const noun = getNoun();
 
 		return {
 			wordType: "lastName",
-			lastName: probability > 90 ? noun.plural : noun.singular,
+			lastName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
 		};
 	} else {
 		return randomFromArray(lastNames);
