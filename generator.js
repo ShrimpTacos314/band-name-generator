@@ -1,3 +1,50 @@
+/*
+As part of the transition from one system of generation to another, there's
+gonna be piles of refactoring. What should be done?
+
+I like having the randomness functions in their own file. They are staying.
+I think having the generator code in its own function would be a good idea, and
+then we could have a function for page updates in another file.
+
+Each part of speech would be its own class with percentages based on what comes
+next in the names. They would have a function to get the next word in the name
+based off of probabilities, just like a Markov chain.
+
+What parts of speech would I need?
+
+- Articles
+  Usually "the". =)
+
+- Subjects
+  Come usually at the very beginning of a name. Can be a noun, a gerund, or a
+  name.
+
+- Objects
+  More frequently appearing than subjects, often after a verb, article, or
+  preposition, or at the end of the name. Can be a noun, a gerund, or a name.
+
+- Transitive verbs
+  Come after a subject. Generally followed by an object. Can be of any of the
+  forms listed.
+
+- Intransitive verbs
+  Come after a subject. Not followed by an object. Can be any of the forms
+  listed.
+
+- Adjectives
+  Modify a noun, whether subject or object. Can be an adjective or a participle.
+
+- Conjunctions
+  Usually "and", but can be other things. Can come after an object.
+
+- Adverbs
+  Modify a verb or an adjective. 
+
+- Number
+  Well, its a number. Used in the style of bands such as Crush 40, Matchbox 20,
+  Blink-182 (?) and Haircut 100.
+*/
+
 /**
  * Takes a string and properly capitalizes the individual words in it. This
  * function treats each sequence of characters separated by a whitespace as a 
@@ -624,8 +671,4 @@ const generateName = () => {
 			);
 		}
 	}, "");
-};
-
-const update = () => {
-	document.getElementById("name-display").innerText = generateName();
 };
