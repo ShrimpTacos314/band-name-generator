@@ -43,7 +43,78 @@ What parts of speech would I need?
 - Number
   Well, its a number. Used in the style of bands such as Crush 40, Matchbox 20,
   Blink-182 (?) and Haircut 100.
+
+- All the ones I forgot
+  Saw some prepositions and collective nouns, etc. Decided to make a class for
+  those.
+
+With the class and next-word system worked out, we now need to decide how we're
+going to actually pass the words to those classes. I like the system I have now,
+with a meaty bank of words and getter functions that randomly choose one or ano-
+ther from those banks. Maybe, for ease of access, they should be moved to a sep-
+arate file.
+
+There are a few words that don't work quite as well with a getter function pull-
+ing a random word from an entire bank. For instance, "the", "a", and "an" should
+not appear with an equal frequency, and "an" should not appear before "boat".
+More specialized functions are needed.
+
+A similar question: What about words that could work well in multiple contexts?
+For instance, how would we know whether to pluralize a noun or leave it
+singular? Or which verb tense to use? I think the solution here is similar to
+what I was already doing: to have each word be represented by an object
+containing multiple possible tenses or word forms, and then determining which
+one to use based off of the context.
 */
+
+class NameStart {
+	constructor() {
+		this.word = "";
+	}
+
+	getNext() {
+		const nextWord = getWeightedRandomInt(30, 1, 32, 33, 1, 1, 2, 1, 20, 6, 14, 2);
+
+		switch(nextWord) {
+			//30 times out of 143, the name start will lead to an article.
+			case 0:
+				return new Article("article");
+			//1 time out of 143, the name start will lead to a subject.
+			case 1:
+				return new Subject("subject");
+			//32 times out of 143, the name start will lead to an object.
+			case 2:
+				return new NameObject("object");
+			//33 times out of 143, the name start will lead to an adjective.
+			case 3:
+				return new Adjective("adjective");
+			//1 time out of 143, the name start will lead to a transitive verb.
+			case 4:
+				return new TransitiveVerb("transitiveverb");
+			//1 time out of 143, the name start will lead to an intransitive verb.
+			case 5:
+				return new IntransitiveVerb("intransitiveverb");
+			//2 times out of 143, the name start will lead to an adverb.
+			case 6:
+				return new Adverb("adverb");
+			//1 time out of 143, the name start will lead to a number.
+			case 7:
+				return new NameNumber("number");
+			//20 times out of 143, the name start will lead to a first name.
+			case 8:
+				return new FirstName("firstname");
+			//6 times out of 143, the name start will lead to a last name.
+			case 9:
+				return new LastName("lastname");
+			//14 times out of 143, the name start will lead to a place.
+			case 10:
+				return new Place("place");
+			//2 times out of 143, the name start will lead to a preposition.
+			case 11:
+				return new Preposition("preposition");
+		}
+	}
+}
 
 class Article {
 	constructor (word) {
@@ -51,7 +122,34 @@ class Article {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(1, 30, 6, 1, 2, 1, 1, 2);
 
+		switch(nextWord) {
+			//1 time out of 44, an article will lead to a subject.
+			case 0:
+				return new Subject("subject");
+			//30 times out of 44, an article will lead to an object.
+			case 1:
+				return new NameObject("object");
+			//6 times out of 44, an article will lead to an adjective.
+			case 2:
+				return new Adjective("adjective");
+			//1 time out of 44, an article will lead to an adverb.
+			case 3:
+				return new Adverb("adverb");
+			//2 times out of 44, an article will lead to a first name.
+			case 4:
+				return new FirstName("firstName");
+			//1 time out of 44, an article will lead to a last name.
+			case 5:
+				return new LastName("lastName");
+			//1 time out of 44, an article will lead to a place.
+			case 6:
+				return new Place("place");
+			//2 times out of 44, an article will lead to a collective noun.
+			case 7:
+				return new CollectiveNoun("collectivenoun");
+		}
 	}
 }
 
@@ -61,37 +159,47 @@ class Subject {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(2, 1);
 
+		switch(nextWord) {
+			//2 times out of 3, a subject will lead to a transitive verb.
+			case 0:
+				return new TransitiveVerb("transitiveverb");
+			//1 time out of 3, a subject will lead to an intransitive verb.
+			case 1:
+				return new IntransitiveVerb("intransitiveverb");
+		}
 	}
 }
 
-class Object {
+class NameObject {
 	constructor (word) {
 		this.word = word;
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(6, 4, 3, 8, 5, 134);
 
-	}
-}
-
-class TraansitiveVerb {
-	constructor (word) {
-		this.word = word;
-	}
-
-	getNext() {
-
-	}
-}
-
-class IntransitiveVerb {
-	constructor (word) {
-		this.word = word;
-	}
-
-	getNext() {
-
+		switch(nextWord) {
+			//6 times out of 160, an object will lead to another object.
+			case 0:
+				return new NameObject("object");
+			//4 times out of 160, an object will lead to a conjunction.
+			case 1:
+				return new Conjunction("conjunction");
+			//3 times out of 160, an object will lead to a number.
+			case 2:
+				return new NameNumber("3.1416");
+			//8 times out of 160, an object will lead to a preposition.
+			case 3:
+				return new Preposition("preposition");
+			//5 times out of 160, an object will lead to a collective noun.
+			case 4:
+				return new CollectiveNoun("collectivenoun");
+			//134 times out of 160, an object will lead to the end of the name.
+			case 5:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -101,7 +209,66 @@ class Adjective {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(35, 3, 1, 2, 6);
 
+		switch(nextWord) {
+			//35 times out of 47, an adjective will lead to an object.
+			case 0:
+				return new NameObject("object");
+			//3 times out of 47, an adjective will lead to another adjective.
+			case 1:
+				return new Adjective("adjective");
+			//1 time out of 47, an adjective will lead to a conjunction.
+			case 2:
+				return new Conjunction("conjunction");
+			//2 times out of 47, an adjective will lead to a collective noun.
+			case 3:
+				return new CollectiveNoun("collectivenoun");
+			//6 times out of 47, an adjective will lead to the end of the name.
+			case 4:
+				return new NameEnd();
+		}
+	}
+}
+
+class TransitiveVerb {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+		const nextWord = getWeightedRandomInt(1, 2);
+
+		switch(nextWord) {
+			//1 time out of 3, a transitive verb will lead to an article.
+			case 0:
+				return new Article("article");
+			//2 times out of 3, a transitive verb will lead to an object.
+			case 1:
+				return new NameObject("object");
+		}
+	}
+}
+
+class IntransitiveVerb {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+		const nextWord = getWeightedRandomInt(1, 5, 1);
+
+		switch(nextWord) {
+			//1 time out of 7, an intransitive verb will lead to an adverb.
+			case 0:
+				return new Adverb("adverb");
+			//5 times out of 7, an intransitive verb will lead to a preposition.
+			case 1:
+				return new Preposition("preposition");
+			//1 time out of 7, an intransitive verb will lead to the end of the name.
+			case 2:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -111,17 +278,22 @@ class Conjunction {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(10, 3, 1, 1);
 
-	}
-}
-
-class Number {
-	constructor (word) {
-		this.word = word;
-	}
-
-	getNext() {
-
+		switch(nextWord) {
+			//10 times out of 15, a conjunction will lead to an article.
+			case 0:
+				return new Article("article");
+			//3 times out of 15, a conjunction will lead to an object.
+			case 1: 
+				return new NameObject("object");
+			//1 time out of 15, a conjunction will lead to an adjective.
+			case 2:
+				return new Adjective("adjective");
+			//1 time out of 15, a conjunction will lead to a first name.
+			case 3:
+				return new FirstName("firstname");
+		}
 	}
 }
 
@@ -131,7 +303,35 @@ class Adverb {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(2, 1);
 
+		switch(nextWord) {
+			//2 times out of 3, an adverb will lead to an adjective.
+			case 0:
+				return new Adjective("adjective");
+			//1 time out of 3, an adverb will lead to a preposition.
+			case 1:
+				return new Preposition("preposition");
+		}
+	}
+}
+
+class NameNumber {
+	constructor (word) {
+		this.word = word;
+	}
+
+	getNext() {
+		const nextWord = getWeightedRandomInt(1, 4);
+
+		switch(nextWord) {
+			//1 time out of 5, a number will lead to an object.
+			case 0:
+				return new NameObject("object");
+			//4 times out of 5, a number will lead to the end of the name.
+			case 1:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -141,7 +341,34 @@ class FirstName {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(4, 1, 1, 1, 6, 9, 1, 4);
 
+		switch(nextWord) {
+			//4 times out of 27, a first name will lead to an object.
+			case 0:
+				return new NameObject("object");
+			//1 time out of 27, a first name will lead to an adjective.
+			case 1:
+				return new Adjective("adjective");
+			//1 time out of 27, a first name will lead to a transitive verb.
+			case 2:
+				return new TransitiveVerb("transitiveverb");
+			//1 time out of 27, a first name will lead to an intransitive verb.
+			case 3:
+				return new IntransitiveVerb("intransitiveverb");
+			//6 times out of 27, a first name will lead to a conjunction.
+			case 4:
+				return new Conjunction("conjunction");
+			//9 times out of 27, a first name will lead to a last name.
+			case 5:
+				return new LastName("lastname");
+			//1 time out of 27, a first name will lead to a collective noun.
+			case 6:
+				return new CollectiveNoun("collectivenoun");
+			//4 times out of 27, a first name will lead to the end of the name.
+			case 7:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -151,7 +378,25 @@ class LastName {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(2, 5, 1, 2, 6);
 
+		switch(nextWord) {
+			//2 times out of 16, a last name will lead to an object.
+			case 0:
+				return new NameObject("object");
+			//5 times out of 16, a last name will lead to a conjunction.
+			case 1:
+				return new Conjunction("conjunction");
+			//1 time out of 16, a last name will lead to another last name.
+			case 2:
+				return new LastName("lastname");
+			//2 times out of 16, a last name will lead to a collective noun.
+			case 3:
+				return new CollectiveNoun("collectivenoun");
+			//6 times out of 16, a last name will lead to the end of the name.
+			case 4:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -161,7 +406,25 @@ class Place {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(8, 1, 1, 2, 22);
 
+		switch(nextWord) {
+			//8 times out of 34, a place will lead to an object.
+			case 0:
+				return new NameObject("object");
+			//1 time out of 34, a place will lead to a transitive verb.
+			case 1:
+				return new TransitiveVerb("transitiveverb");
+			//1 time out of 34, a place will lead to a number.
+			case 2:
+				return new NameNumber("3.1416");
+			//2 times out of 34, a place will lead to a first name.
+			case 3:
+				return new FirstName("firstname");
+			//22 times out of 34, a place will lead to the end of the name.
+			case 4:
+				return new NameEnd();
+		}
 	}
 }
 
@@ -171,7 +434,19 @@ class Preposition {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(3, 10, 1);
 
+		switch(nextWord) {
+			//3 times out of 14, a preposition will lead to an article.
+			case 0:
+				return new Article("article");
+			//10 times out of 14, a preposition will lead to an object.
+			case 1:
+				return new NameObject("object");
+			//1 time out of 14, a preposition will lead to a place
+			case 2:
+				return new Place("place");
+		}
 	}
 }
 
@@ -181,580 +456,34 @@ class CollectiveNoun {
 	}
 
 	getNext() {
+		const nextWord = getWeightedRandomInt(1, 1, 3, 27);
 
+		switch(nextWord) {
+			//1 time out of 32, a collective noun will be followed by a transitive verb.
+			case 0:
+				return new TransitiveVerb("transitiveverb");
+			//1 time out of 32, a collective noun will be followed by an intransitive verb.
+			case 1:
+				return new IntransitiveVerb("intransitiveverb");
+			//3 times out of 32, a collective noun will be followed by a preposition.
+			case 2:
+				return new Preposition("preposition");
+			//27 times out of 32, a collective noun will be followed by the end of the name.
+			case 3:
+				return new NameEnd();
+		}
 	}
 }
 
-
-/**
- * Takes a string and properly capitalizes the individual words in it. This
- * function treats each sequence of characters separated by a whitespace as a 
- * word. It also defines properly capitalized words as words where the first
- * letter is uppercase while all after it are lowercase. This method preserves
- * whitespace in its original order and quantity.
- *
- * Examples:
- * ```
- * capitalize("depeche mode") returns "Depeche Mode"
- * capitalize("THIS IS SPARTA") returns "This Is Sparta"
- * capitalize("   bAnAnA   pUdDiNg   ") returns "   Banana   Pudding   "
- * capitalize("γεια σου φιλε") returns "Γεια Σου Φιλε"
- * ```
- *
- * @param str The string to capitalize.
- * @return The string `str` with the first letter of each word uppercased.
- */
-const capitalize = (str) => {
-	const strings = str.split(/\s/);
-
-	if (strings.length === 0) {
-		return "";
+class NameEnd {
+	constructor () {
+		this.word = "";
 	}
 
-	let toReturn =
-		strings[0].substring(0, 1).toUpperCase() +
-		strings[0].substring(1).toLowerCase();
-
-	for (let i = 1; i < strings.length; i++) {
-		toReturn =
-			toReturn +
-			" " +
-			strings[i].substring(0, 1).toUpperCase() +
-			strings[i].substring(1).toLowerCase();
+	getNext() {
+		return new NameEnd();
 	}
-
-	return toReturn;
-};
-
-/**
- * A list of consonants beginning a word for the random word generator.
- */
-const startConsonants = [
-	`b`,
-	`bl`,
-	`br`,
-	`c`,
-	`ch`,
-	`cl`,
-	`cr`,
-	`d`,
-	`dr`,
-	`f`,
-	`fl`,
-	`fr`,
-	`g`,
-	`gl`,
-	`gr`,
-	`h`,
-	`j`,
-	`k`,
-	`l`,
-	`m`,
-	`n`,
-	`p`,
-	`pl`,
-	`pr`,
-	`qu`,
-	`r`,
-	`s`,
-	`sc`,
-	`sh`,
-	`sk`,
-	`sl`,
-	`sm`,
-	`sn`,
-	`sp`,
-	`squ`,
-	`st`,
-	`sw`,
-	`t`,
-	`th`,
-	`tw`,
-	`v`,
-	`w`,
-	`wh`,
-	`x`,
-	`y`,
-	`z`,
-];
-
-/**
- * A list of consonants ending a word for the random word generator.
- */
-const endConsonants = [
-	`b`,
-	`bb`,
-	`ble`,
-	`bre`,
-	`c`,
-	`ch`,
-	`ct`,
-	`d`,
-	`dd`,
-	`dge`,
-	`f`,
-	`ff`,
-	`g`,
-	`gg`,
-	`h`,
-	`j`,
-	`k`,
-	`ck`,
-	`l`,
-	`ll`,
-	`m`,
-	`mm`,
-	`n`,
-	`nn`,
-	`p`,
-	`ph`,
-	`r`,
-	`rr`,
-	`s`,
-	`sh`,
-	`sm`,
-	`sp`,
-	`ss`,
-	`st`,
-	`t`,
-	`th`,
-	`tt`,
-	`v`,
-	`w`,
-	`x`,
-	`y`,
-	`z`,
-];
-
-/**
- * A list of vowels for the random word generator.
- */
-const vowels = [
-	`a`,
-	`ae`,
-	`ai`,
-	`e`,
-	`ea`,
-	`ee`,
-	`ei`,
-	`i`,
-	`ie`,
-	`o`,
-	`oa`,
-	`oi`,
-	`oo`,
-	`ou`,
-	`u`,
-	`y`,
-];
-
-/**
- * Generates a random word. Fundamentally, the generator creates a syllable by
- * taking a random consonant or consonant blend from `startConsonants`, then a
- * random vowel or vowel blend from `vowels`, then a random consonant or blend
- * from `endConsonants`. The generator creates randomly many syllables, but
- * favors words between three and eight characters.
- * 
- * @returns A random nonsense word.
- */
-const generateWord = () => {
-	let syllableGenerationChance = 1;
-	let toReturn = "";
-
-	//Each time a syllable is generated, the chance of generating another lowers
-	//by some percent (starting at 100%).
-	while (Math.random() < syllableGenerationChance) {
-		let consonantProbability;
-
-		//If the word ends in a vowel, add a consonant 80% of the time;
-		//otherwise, add a consonant 20% of the time.
-		if (toReturn.search(/.*[aeiouy]$/) > -1 || toReturn.length === 0) {
-			consonantProbability = 0.8;
-		} else {
-			consonantProbability = 0.2;
-		}
-
-		if (Math.random() <= consonantProbability) {
-			toReturn += randomFromArray(startConsonants);
-		}
-
-		//Adds a vowel always.
-		toReturn += randomFromArray(vowels);
-
-		//Has a 66% chance of adding a consonant to the end of the syllable.
-		if (Math.random() > 0.66) {
-			toReturn += randomFromArray(endConsonants);
-		}
-
-		const minimumSafeLength = 3;
-		const maximumSafeLength = 8;
-		if (toReturn.length < minimumSafeLength) {
-			syllableGenerationChance *= Math.random() * 1.3;
-		} else if (toReturn > maximumSafeLength) {
-			syllableGenerationChance *= Math.random() * 0.7;
-		} else {
-			syllableGenerationChance *= Math.random();
-		}
-	}
-
-	return toReturn;
-};
-
-/**
- * A list of all nouns to use in the band name generator. The nouns are objects
- * of the form:
- * ```
- * {
- *    wordType: "noun",
- *    singular: "Singular form of noun",
- *    plural: "Plural form of noun"
- * }
- * ```
- */
-const nouns = [
-	{
-		wordType: "noun",
-		singular: "goat",
-		plural: "goats",
-	},
-	{
-		wordType: "noun",
-		singular: "foot",
-		plural: "feet",
-	},
-	{
-		wordType: "noun",
-		singular: "music",
-		plural: "music",
-	},
-	{
-		wordType: "noun",
-		singular: "clam",
-		plural: "clams",
-	},
-	{
-		wordType: "noun",
-		singular: "schizophrenic",
-		plural: "schizophrenics",
-	},
-	{
-		wordType: "noun",
-		singular: "jam jar",
-		plural: "jam jars",
-	},
-];
-
-/**
- * A list of all adjectives to use in the band name generator. The adjectives
- * are objects of the form:
- * ```
- * {
- *    wordType: "adjective",
- *    adjective: "The adjective"
- * }
- * ```
- */
-const adjectives = [
-	{
-		wordType: "adjective",
-		adjective: "sleazy",
-	},
-	{
-		wordType: "adjective",
-		adjective: "apathetic",
-	},
-	{
-		wordType: "adjective",
-		adjective: "emo",
-	},
-	{
-		wordType: "adjective",
-		adjective: "paper",
-	},
-	{
-		wordType: "adjective",
-		adjective: "orange",
-	},
-];
-
-/**
- * A list of all first names to use in the band name generator. The first names
- * are objects of the form:
- * ```
- * {
- *    wordType: "firstName",
- *    firstName: "The first name"
- * }
- * ```
- */
-const firstNames = [
-	{
-		wordType: "firstName",
-		firstName: "James",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Gareth",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Willa",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Clark",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Kalmar",
-	},
-];
-
-/**
- * A list of all last names to use in the band name generator. The last names
- * are objects of the form:
- * ```
- * {
- *    wordType: "lastName",
- *    lastName: "The last name"
- * }
- * ```
- */
-const lastNames = [
-	{
-		wordType: "lastName",
-		lastName: "Smith",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Garcia",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Butler",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Wilde",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Wingfeather",
-	},
-];
-
-/**
- * A list of all transitive verbs to use in the band name generator. The
- * transitive verbs are objects of the form:
- * ```
- * {
- *    wordType: "transitiveVerb",
- *    present: "The present tense form of the verb",
- *    past: "The past tense form of the verb",
- *    verbal: "The participle or gerund form of the verb",
- *    thirdPerson: "The third-person form of the verb"
- * }
- * ```
- */
-const transitiveVerbs = [
-	{
-		wordType: "transitiveVerb",
-		present: "buy",
-		past: "bought",
-		verbal: "buying",
-		thirdPerson: "buys",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "tickle",
-		past: "tickled",
-		verbal: "tickling",
-		thirdPerson: "tickles",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "microwave",
-		past: "microwaved",
-		verbal: "microwaving",
-		thirdPerson: "microwaves",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "eat",
-		past: "ate",
-		verbal: "eating",
-		thirdPerson: "eats",
-	},
-];
-
-/**
- * A list of all intransitive verbs to use in the band name generator. The
- * intransitive verbs are objects of the form:
- * ```
- * {
- *    wordType: "intransitiveVerb",
- *    present: "The present tense form of the verb",
- *    past: "The past tense form of the verb",
- *    verbal: "The participle or gerund form of the verb",
- *    thirdPerson: "The third-person form of the verb"
- * }
- * ```
- */
-const intransitiveVerbs = [
-	{
-		wordType: "transitiveVerb",
-		present: "screech",
-		past: "screeched",
-		verbal: "screeching",
-		thirdPerson: "screeches",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "wander",
-		past: "wandered",
-		verbal: "wandering",
-		thirdPerson: "wanders",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "ache",
-		past: "ached",
-		verbal: "aching",
-		thirdPerson: "aches",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "explode",
-		past: "exploded",
-		verbal: "exploding",
-		thirdPerson: "explodes",
-	},
-	{
-		wordType: "transitiveVerb",
-		present: "snore",
-		past: "snored",
-		verbal: "snoring",
-		thirdPerson: "snores",
-	},
-];
-
-/**
- * Gets a random noun from the list.
- * 
- * This function has a 3% chance of returning a random adjective instead. This
- * adjective has `adjective.adjective` as both singular and plural forms of the
- * noun. In this case, the returned object has in its `wordType` field `"noun"`.
- * In addition, this function has a 3% chance of returning a random generated
- * word. This word takes on the singular form, and it also has an `"s"` appended
- * to it to make the plural form. As above, the returned object's `wordType` is
- * `"noun"`.
- *
- * @returns A random word object with `wordType` as noun
- */
-const getNoun = () => {
-	const probability = getWeightedRandomInt(0.03, 0.03, 0.94);
-
-	if (probability === 0) {
-		const adjective = getAdjective();
-		return {
-			wordType: "noun",
-			singular: adjective.adjective,
-			plural: adjective.adjective,
-		};
-	} else if(probability === 1) {
-		const word = generateWord();
-		return {
-			wordType: "noun",
-			singular: word,
-			plural: word + "s"
-		}
-	} else {
-		return randomFromArray(nouns);
-	}
-};
-
-/**
- * Gets a random adjective from the list.
- * 
- * This function has a 3% chance of returning a generated word instead. This
- * word fills the `adjective` property, and the object's `wordType` is
- * `"adjective"`.
- *
- * @returns A random word object with its `wordType` property as `"adjective"`.
- */
-const getAdjective = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
-
-	if(probability === 0) {
-		const word = getNoun();
-		return {
-			wordType: "adjective",
-			adjective: word.singular
-		}
-	} else {
-		return randomFromArray(adjectives);
-	}
-};
-
-/**
- * Gets a random first name from the list. This function has a 3% chance of
- * calling the `getNoun()` function instead. When it does, it takes either the
- * singular or plural form of the noun and adds that value to the `firstName`
- * field of the returned object.
- *
- * @returns A word object with its `wordType` field set to `"firstName"`.
- */
-const getFirstName = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
-
-	if (probability === 0) {
-		const noun = getNoun();
-
-		return {
-			wordType: "firstName",
-			firstName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
-		};
-	} else {
-		return randomFromArray(firstNames);
-	}
-};
-
-/**
- * Gets a random last name from the list. This function has a 3% chance of
- * calling the `getNoun()` function instead. When it does, it takes either the
- * singular or plural form of the noun and adds that value to the `lastName`
- * field of the returned object.
- *
- * @returns A word object with its `wordType` field set to `"lastName"`.
- */
-const getLastName = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
-
-	if (probability === 0) {
-		const noun = getNoun();
-
-		return {
-			wordType: "lastName",
-			lastName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
-		};
-	} else {
-		return randomFromArray(lastNames);
-	}
-};
-
-/**
- * Gets a random transitive verb from the list.
- *
- * @returns A random transitive verb from `transitiveVerbs`.
- */
-const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
-
-/**
- * Gets a random intransitive verb from the list.
- *
- * @returns A random intransitive verb from `intransitiveVerbs`.
- */
-const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
+}
 
 /**
  * Generates a random band name.
