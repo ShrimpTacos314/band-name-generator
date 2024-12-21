@@ -73,9 +73,22 @@ class NameStart {
 	}
 
 	getNext() {
-		const nextWord = getWeightedRandomInt(30, 1, 32, 33, 1, 1, 2, 1, 20, 6, 14, 2);
+		const nextWord = getWeightedRandomInt(
+			30,
+			1,
+			32,
+			33,
+			1,
+			1,
+			2,
+			1,
+			20,
+			6,
+			14,
+			2
+		);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//30 times out of 143, the name start will lead to an article.
 			case 0:
 				return new Article("article");
@@ -117,14 +130,14 @@ class NameStart {
 }
 
 class Article {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(1, 30, 6, 1, 2, 1, 1, 2);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//1 time out of 44, an article will lead to a subject.
 			case 0:
 				return new Subject("subject");
@@ -154,14 +167,14 @@ class Article {
 }
 
 class Subject {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(2, 1);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//2 times out of 3, a subject will lead to a transitive verb.
 			case 0:
 				return new TransitiveVerb("transitiveverb");
@@ -173,14 +186,14 @@ class Subject {
 }
 
 class NameObject {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(6, 4, 3, 8, 5, 134);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//6 times out of 160, an object will lead to another object.
 			case 0:
 				return new NameObject("object");
@@ -204,14 +217,14 @@ class NameObject {
 }
 
 class Adjective {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(35, 3, 1, 2, 6);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//35 times out of 47, an adjective will lead to an object.
 			case 0:
 				return new NameObject("object");
@@ -232,14 +245,14 @@ class Adjective {
 }
 
 class TransitiveVerb {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(1, 2);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//1 time out of 3, a transitive verb will lead to an article.
 			case 0:
 				return new Article("article");
@@ -251,14 +264,14 @@ class TransitiveVerb {
 }
 
 class IntransitiveVerb {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(1, 5, 1);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//1 time out of 7, an intransitive verb will lead to an adverb.
 			case 0:
 				return new Adverb("adverb");
@@ -273,19 +286,19 @@ class IntransitiveVerb {
 }
 
 class Conjunction {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(10, 3, 1, 1);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//10 times out of 15, a conjunction will lead to an article.
 			case 0:
 				return new Article("article");
 			//3 times out of 15, a conjunction will lead to an object.
-			case 1: 
+			case 1:
 				return new NameObject("object");
 			//1 time out of 15, a conjunction will lead to an adjective.
 			case 2:
@@ -298,14 +311,14 @@ class Conjunction {
 }
 
 class Adverb {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(2, 1);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//2 times out of 3, an adverb will lead to an adjective.
 			case 0:
 				return new Adjective("adjective");
@@ -317,14 +330,14 @@ class Adverb {
 }
 
 class NameNumber {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(1, 4);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//1 time out of 5, a number will lead to an object.
 			case 0:
 				return new NameObject("object");
@@ -336,14 +349,14 @@ class NameNumber {
 }
 
 class FirstName {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(4, 1, 1, 1, 6, 9, 1, 4);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//4 times out of 27, a first name will lead to an object.
 			case 0:
 				return new NameObject("object");
@@ -373,14 +386,14 @@ class FirstName {
 }
 
 class LastName {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(2, 5, 1, 2, 6);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//2 times out of 16, a last name will lead to an object.
 			case 0:
 				return new NameObject("object");
@@ -401,14 +414,14 @@ class LastName {
 }
 
 class Place {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(8, 1, 1, 2, 22);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//8 times out of 34, a place will lead to an object.
 			case 0:
 				return new NameObject("object");
@@ -429,14 +442,14 @@ class Place {
 }
 
 class Preposition {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(3, 10, 1);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//3 times out of 14, a preposition will lead to an article.
 			case 0:
 				return new Article("article");
@@ -451,14 +464,14 @@ class Preposition {
 }
 
 class CollectiveNoun {
-	constructor (word) {
+	constructor(word) {
 		this.word = word;
 	}
 
 	getNext() {
 		const nextWord = getWeightedRandomInt(1, 1, 3, 27);
 
-		switch(nextWord) {
+		switch (nextWord) {
 			//1 time out of 32, a collective noun will be followed by a transitive verb.
 			case 0:
 				return new TransitiveVerb("transitiveverb");
@@ -476,7 +489,7 @@ class CollectiveNoun {
 }
 
 class NameEnd {
-	constructor () {
+	constructor() {
 		this.word = "";
 	}
 

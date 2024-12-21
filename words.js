@@ -213,6 +213,37 @@ const generateWord = () => {
 };
 
 /**
+ * Gets a random article. This function returns "the" 95% of the time, and "a"
+ * or "an" the remaining 5%. The returned object is of the form:
+ * ```
+ * {
+ *    wordType: "article",
+ *    consonant: "spelling when followed by consonant",
+ *    vowel: "spelling when followed by vowel"
+ * }
+ * ```
+ * @returns an object with `wordType` as `"article"`
+ */
+const getArticle = () => {
+	//95% chance of returning "the", 5% chance of returning "a"/"an"
+	const whichArticle = getWeightedRandomInt(0.95, 0.05);
+
+	if(whichArticle === 0) {
+		return {
+			wordType: "article",
+			consonant: "the",
+			vowel: "the"
+		};
+	} else {
+		return {
+			wordType: "article",
+			consonant: "a",
+			vowel: "an"
+		};
+	}
+}
+
+/**
  * A list of all nouns to use in the band name generator. The nouns are objects
  * of the form:
  * ```
@@ -222,7 +253,7 @@ const generateWord = () => {
  *    plural: "Plural form of noun"
  * }
  * ```
- */
+*/
 const nouns = [
 	{
 		wordType: "noun",
@@ -255,6 +286,43 @@ const nouns = [
 		plural: "jam jars",
 	},
 ];
+
+/**
+ * Gets a random noun from the list.
+ * 
+ * This function has a 3% chance of returning a random adjective instead. This
+ * adjective has `adjective.adjective` as both singular and plural forms of the
+ * noun. In this case, the returned object has in its `wordType` field `"noun"`.
+ * In addition, this function has a 3% chance of returning a random generated
+ * word. This word takes on the singular form, and it also has an `"s"` appended
+ * to it to make the plural form. As above, the returned object's `wordType` is
+ * `"noun"`.
+ *
+ * @returns A random word object with `wordType` as noun
+ */
+const getNoun = () => {
+	const probability = getWeightedRandomInt(0.03, 0.03, 0.94);
+	//3% chance of returning adjective, 3% chance of returning random word, 94%
+	//chance of returning actual noun
+
+	if (probability === 0) {
+		const adjective = getAdjective();
+		return {
+			wordType: "noun",
+			singular: adjective.adjective,
+			plural: adjective.adjective,
+		};
+	} else if(probability === 1) {
+		const word = generateWord();
+		return {
+			wordType: "noun",
+			singular: word,
+			plural: word + "s"
+		}
+	} else {
+		return randomFromArray(nouns);
+	}
+};
 
 /**
  * A list of all adjectives to use in the band name generator. The adjectives
@@ -290,70 +358,27 @@ const adjectives = [
 ];
 
 /**
- * A list of all first names to use in the band name generator. The first names
- * are objects of the form:
- * ```
- * {
- *    wordType: "firstName",
- *    firstName: "The first name"
- * }
- * ```
+ * Gets a random adjective from the list.
+ * 
+ * This function has a 3% chance of returning a generated word instead. This
+ * word fills the `adjective` property, and the object's `wordType` is
+ * `"adjective"`.
+ *
+ * @returns A random word object with its `wordType` property as `"adjective"`.
  */
-const firstNames = [
-	{
-		wordType: "firstName",
-		firstName: "James",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Gareth",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Willa",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Clark",
-	},
-	{
-		wordType: "firstName",
-		firstName: "Kalmar",
-	},
-];
+const getAdjective = () => {
+	const probability = getWeightedRandomInt(0.03, 0.97);
 
-/**
- * A list of all last names to use in the band name generator. The last names
- * are objects of the form:
- * ```
- * {
- *    wordType: "lastName",
- *    lastName: "The last name"
- * }
- * ```
- */
-const lastNames = [
-	{
-		wordType: "lastName",
-		lastName: "Smith",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Garcia",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Butler",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Wilde",
-	},
-	{
-		wordType: "lastName",
-		lastName: "Wingfeather",
-	},
-];
+	if(probability === 0) {
+		const word = generateWord();
+		return {
+			wordType: "adjective",
+			adjective: word
+		}
+	} else {
+		return randomFromArray(adjectives);
+	}
+};
 
 /**
  * A list of all transitive verbs to use in the band name generator. The
@@ -400,6 +425,13 @@ const transitiveVerbs = [
 ];
 
 /**
+ * Gets a random transitive verb from the list.
+ *
+ * @returns A random transitive verb from `transitiveVerbs`.
+ */
+const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
+
+/**
  * A list of all intransitive verbs to use in the band name generator. The
  * intransitive verbs are objects of the form:
  * ```
@@ -411,38 +443,38 @@ const transitiveVerbs = [
  *    thirdPerson: "The third-person form of the verb"
  * }
  * ```
- */
+*/
 const intransitiveVerbs = [
 	{
-		wordType: "transitiveVerb",
+		wordType: "intransitiveVerb",
 		present: "screech",
 		past: "screeched",
 		verbal: "screeching",
 		thirdPerson: "screeches",
 	},
 	{
-		wordType: "transitiveVerb",
+		wordType: "intransitiveVerb",
 		present: "wander",
 		past: "wandered",
 		verbal: "wandering",
 		thirdPerson: "wanders",
 	},
 	{
-		wordType: "transitiveVerb",
+		wordType: "intransitiveVerb",
 		present: "ache",
 		past: "ached",
 		verbal: "aching",
 		thirdPerson: "aches",
 	},
 	{
-		wordType: "transitiveVerb",
+		wordType: "intransitiveVerb",
 		present: "explode",
 		past: "exploded",
 		verbal: "exploding",
 		thirdPerson: "explodes",
 	},
 	{
-		wordType: "transitiveVerb",
+		wordType: "intransitiveVerb",
 		present: "snore",
 		past: "snored",
 		verbal: "snoring",
@@ -451,85 +483,166 @@ const intransitiveVerbs = [
 ];
 
 /**
- * Gets a random noun from the list.
- * 
- * This function has a 3% chance of returning a random adjective instead. This
- * adjective has `adjective.adjective` as both singular and plural forms of the
- * noun. In this case, the returned object has in its `wordType` field `"noun"`.
- * In addition, this function has a 3% chance of returning a random generated
- * word. This word takes on the singular form, and it also has an `"s"` appended
- * to it to make the plural form. As above, the returned object's `wordType` is
- * `"noun"`.
+ * Gets a random intransitive verb from the list.
  *
- * @returns A random word object with `wordType` as noun
+ * @returns A random intransitive verb from `intransitiveVerbs`.
  */
-const getNoun = () => {
-	const probability = getWeightedRandomInt(0.03, 0.03, 0.94);
-
-	if (probability === 0) {
-		const adjective = getAdjective();
-		return {
-			wordType: "noun",
-			singular: adjective.adjective,
-			plural: adjective.adjective,
-		};
-	} else if(probability === 1) {
-		const word = generateWord();
-		return {
-			wordType: "noun",
-			singular: word,
-			plural: word + "s"
-		}
-	} else {
-		return randomFromArray(nouns);
-	}
-};
+const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
 
 /**
- * Gets a random adjective from the list.
- * 
- * This function has a 3% chance of returning a generated word instead. This
- * word fills the `adjective` property, and the object's `wordType` is
- * `"adjective"`.
- *
- * @returns A random word object with its `wordType` property as `"adjective"`.
+ * Gets a random conjunction, either "or" or "and", biased heavily towards "and".
+ * The returned object is of the form:
+ * ```
+ * {
+ *    wordType: "conjunction",
+ *    conjunction: "the conjunction"
+ * }
+ * ```
+ * @returns an object with `wordType` set to `"conjunction"`
  */
-const getAdjective = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
+const getConjunction = () => {
+	const probability = getWeightedRandomInt(0.9, 0.1);
+	//90% chance of returning "and", 10% chance of returning "or"
 
 	if(probability === 0) {
-		const word = getNoun();
 		return {
-			wordType: "adjective",
-			adjective: word.singular
-		}
+			wordType: "conjunction",
+			conjunction: "and"
+		};
 	} else {
-		return randomFromArray(adjectives);
+		return {
+			wordType: "conjunction",
+			conjunction: "or"
+		};
 	}
-};
+}
+
+/**
+ * A list of all adverbs to use in the band name generator. The adverbs are of
+ * the form:
+ * ```
+ * {
+ *    wordType: "adverb",
+ *    adverb: "the adverb"
+ * }
+ * ```
+ */
+const adverbs = [
+	{
+		wordType: "adverb",
+		adverb: "coolly",
+	},
+	{
+		wordType: "adverb",
+		adverb: "unfortunately",
+	},
+	{
+		wordType: "adverb",
+		adverb: "astonishingly",
+	},
+	{
+		wordType: "adverb",
+		adverb: "deliciously",
+	},
+	{
+		wordType: "adverb",
+		adverb: "not",
+	}
+];
+
+const getAdverb = () => randomFromArray(adverbs);
+
+/**
+ * Gets an object representing a number in word form. The returned object is of
+ * the form:
+ * ```
+ * {
+ *    wordType: "number",
+ *    number: "A number"
+ * }
+ * ```
+ * @returns an object with `wordType` set to `"number"`.
+ */
+const getNumber = () => ({
+	wordType: "number",
+	number: getRandomInt(0, 100).toString()
+});
+
+/**
+ * A list of all first names to use in the band name generator. The first names
+ * are objects of the form:
+ * ```
+ * {
+ *    wordType: "firstName",
+ *    firstName: "The first name"
+ * }
+ * ```
+ */
+const firstNames = [
+	{
+		wordType: "firstName",
+		firstName: "James",
+	},
+	{
+		wordType: "firstName",
+		firstName: "Gareth",
+	},
+	{
+		wordType: "firstName",
+		firstName: "Willa",
+	},
+	{
+		wordType: "firstName",
+		firstName: "Clark",
+	},
+	{
+		wordType: "firstName",
+		firstName: "Kalmar",
+	},
+];
 
 /**
  * Gets a random first name from the list. This function has a 3% chance of
  * calling the `getNoun()` function instead. When it does, it takes either the
  * singular or plural form of the noun and adds that value to the `firstName`
  * field of the returned object.
- *
- * @returns A word object with its `wordType` field set to `"firstName"`.
- */
-const getFirstName = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
+*
+* @returns A word object with its `wordType` field set to `"firstName"`.
+*/
+const getFirstName = () => randomFromArray(firstNames);
 
-	if (probability === 0) {
-		const noun = getNoun();
-
-		return {
-			wordType: "firstName",
-			firstName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
-		};
-	} else {
-		return randomFromArray(firstNames);
-	}
-};
+/**
+ * A list of all last names to use in the band name generator. The last names
+ * are objects of the form:
+ * ```
+ * {
+ *    wordType: "lastName",
+ *    lastName: "The last name"
+ * }
+ * ```
+*/
+const lastNames = [
+	{
+		wordType: "lastName",
+		lastName: "Smith",
+	},
+	{
+		wordType: "lastName",
+		lastName: "Garcia",
+	},
+	{
+		wordType: "lastName",
+		lastName: "Butler",
+	},
+	{
+		wordType: "lastName",
+		lastName: "Wilde",
+	},
+	{
+		wordType: "lastName",
+		lastName: "Wingfeather",
+	},
+];
 
 /**
  * Gets a random last name from the list. This function has a 3% chance of
@@ -539,31 +652,126 @@ const getFirstName = () => {
  *
  * @returns A word object with its `wordType` field set to `"lastName"`.
  */
-const getLastName = () => {
-	const probability = getWeightedRandomInt(0.03, 0.97);
-
-	if (probability === 0) {
-		const noun = getNoun();
-
-		return {
-			wordType: "lastName",
-			lastName: getWeightedRandomInt(0.9, 0.1) === 1 ? noun.plural : noun.singular,
-		};
-	} else {
-		return randomFromArray(lastNames);
-	}
-};
+const getLastName = () => randomFromArray(lastNames);
 
 /**
- * Gets a random transitive verb from the list.
- *
- * @returns A random transitive verb from `transitiveVerbs`.
+ * A list of places for the random name generator. The objects are of the form:
+ * ```
+ * {
+ *    wordType: "place",
+ *    place: "The place"
+ * }
+ * ```
  */
-const getTransitiveVerb = () => randomFromArray(transitiveVerbs);
+const places = [
+	{
+		wordType: "place",
+		place: "Berlin",
+	},
+	{
+		wordType: "place",
+		place: "Phillipines",
+	},
+	{
+		wordType: "place",
+		place: "Canada",
+	},
+	{
+		wordType: "place",
+		place: "Yellville",
+	},
+	{
+		wordType: "place",
+		place: "Whoville",
+	},
+];
 
 /**
- * Gets a random intransitive verb from the list.
- *
- * @returns A random intransitive verb from `intransitiveVerbs`.
+ * Returns a random place from the list.
+ * 
+ * @returns A random object with `wordType` of `"place"`.
  */
-const getIntransitiveVerb = () => randomFromArray(intransitiveVerbs);
+const getPlace = () => randomFromArray(places);
+
+/**
+ * A list of the prepositions for the random name generator. The prepositions
+ * are of the form:
+ * ```
+ * {
+ *    wordType: "preposition",
+ *    preposition: "The preposition"
+ * }
+ * ```
+ */
+const prepositions = [
+	{
+		wordType: "preposition",
+		preposition: "for"
+	},
+	{
+		wordType: "preposition",
+		preposition: "about"
+	},
+	{
+		wordType: "preposition",
+		preposition: "with"
+	},
+	{
+		wordType: "preposition",
+		preposition: "in"
+	},
+	{
+		wordType: "preposition",
+		preposition: "near"
+	},
+];
+
+/**
+ * Gets a random preposition from the list.
+ * @returns a random object with its `wordType` set to `"preposition"`.
+ */
+const getPreposition = () => randomFromArray(prepositions);
+
+/**
+ * A list of collective nouns for the random name generator. These objects are
+ * of the form:
+ * ```
+ * {
+ *    wordType: "collectiveNoun",
+ *    collectiveNoun: "The collective noun"
+ * }
+ * ```
+ * Unlike normal nouns, these words do not have a singular/plural distinction.
+ */
+const collectiveNouns = [
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "band",
+	},
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "club",
+	},
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "crew",
+	},
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "cult",
+	},
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "story",
+	},
+	{
+		wordType: "collectiveNoun",
+		collectiveNoun: "association",
+	},
+];
+
+/**
+ * Gets a random collective noun from the list.
+ * @returns a random object with a `wordType` of `"collectiveNoun"`.
+ */
+const getCollectiveNoun = () => randomFromArray(collectiveNouns);

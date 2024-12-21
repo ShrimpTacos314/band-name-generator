@@ -8,7 +8,7 @@
  * @returns An integer between `min` (inclusive) and `max` (exclusive).
  */
 const getRandomInt = (min, max) =>
-	Math.floor(Math.random() * (max - min) + min);
+	Math.floor(Math.random() * (max + 1 - min) + min);
 
 /**
  * Gets a random integer according to predetermined weights. The range of
