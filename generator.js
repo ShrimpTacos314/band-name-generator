@@ -91,40 +91,40 @@ class NameStart {
 		switch (nextWord) {
 			//30 times out of 143, the name start will lead to an article.
 			case 0:
-				return new Article("article");
+				return new Article(getArticle());
 			//1 time out of 143, the name start will lead to a subject.
 			case 1:
-				return new Subject("subject");
+				return new Subject(getNoun());
 			//32 times out of 143, the name start will lead to an object.
 			case 2:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//33 times out of 143, the name start will lead to an adjective.
 			case 3:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 143, the name start will lead to a transitive verb.
 			case 4:
-				return new TransitiveVerb("transitiveverb");
+				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 143, the name start will lead to an intransitive verb.
 			case 5:
-				return new IntransitiveVerb("intransitiveverb");
+				return new IntransitiveVerb(getinTransitiveVerb());
 			//2 times out of 143, the name start will lead to an adverb.
 			case 6:
-				return new Adverb("adverb");
+				return new Adverb(getAdverb());
 			//1 time out of 143, the name start will lead to a number.
 			case 7:
-				return new NameNumber("number");
+				return new NameNumber(getNumber());
 			//20 times out of 143, the name start will lead to a first name.
 			case 8:
-				return new FirstName("firstname");
+				return new FirstName(getFirstName());
 			//6 times out of 143, the name start will lead to a last name.
 			case 9:
-				return new LastName("lastname");
+				return new LastName(getLastName());
 			//14 times out of 143, the name start will lead to a place.
 			case 10:
-				return new Place("place");
+				return new Place(getPlace());
 			//2 times out of 143, the name start will lead to a preposition.
 			case 11:
-				return new Preposition("preposition");
+				return new Preposition(getPreposition());
 		}
 	}
 }
@@ -140,28 +140,28 @@ class Article {
 		switch (nextWord) {
 			//1 time out of 44, an article will lead to a subject.
 			case 0:
-				return new Subject("subject");
+				return new Subject(getNoun());
 			//30 times out of 44, an article will lead to an object.
 			case 1:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//6 times out of 44, an article will lead to an adjective.
 			case 2:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 44, an article will lead to an adverb.
 			case 3:
-				return new Adverb("adverb");
+				return new Adverb(getAdverb());
 			//2 times out of 44, an article will lead to a first name.
 			case 4:
-				return new FirstName("firstName");
+				return new FirstName(getFirstName());
 			//1 time out of 44, an article will lead to a last name.
 			case 5:
-				return new LastName("lastName");
+				return new LastName(getLastName());
 			//1 time out of 44, an article will lead to a place.
 			case 6:
-				return new Place("place");
+				return new Place(getPlace());
 			//2 times out of 44, an article will lead to a collective noun.
 			case 7:
-				return new CollectiveNoun("collectivenoun");
+				return new CollectiveNoun(getCollectiveNoun());
 		}
 	}
 }
@@ -177,10 +177,10 @@ class Subject {
 		switch (nextWord) {
 			//2 times out of 3, a subject will lead to a transitive verb.
 			case 0:
-				return new TransitiveVerb("transitiveverb");
+				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 3, a subject will lead to an intransitive verb.
 			case 1:
-				return new IntransitiveVerb("intransitiveverb");
+				return new IntransitiveVerb(getinTransitiveVerb());
 		}
 	}
 }
@@ -196,19 +196,19 @@ class NameObject {
 		switch (nextWord) {
 			//6 times out of 160, an object will lead to another object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//4 times out of 160, an object will lead to a conjunction.
 			case 1:
-				return new Conjunction("conjunction");
+				return new Conjunction(getConjunction());
 			//3 times out of 160, an object will lead to a number.
 			case 2:
-				return new NameNumber("3.1416");
+				return new NameNumber(getNumber());
 			//8 times out of 160, an object will lead to a preposition.
 			case 3:
-				return new Preposition("preposition");
+				return new Preposition(getPreposition());
 			//5 times out of 160, an object will lead to a collective noun.
 			case 4:
-				return new CollectiveNoun("collectivenoun");
+				return new CollectiveNoun(getCollectiveNoun());
 			//134 times out of 160, an object will lead to the end of the name.
 			case 5:
 				return new NameEnd();
@@ -227,16 +227,16 @@ class Adjective {
 		switch (nextWord) {
 			//35 times out of 47, an adjective will lead to an object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//3 times out of 47, an adjective will lead to another adjective.
 			case 1:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 47, an adjective will lead to a conjunction.
 			case 2:
-				return new Conjunction("conjunction");
+				return new Conjunction(getConjunction());
 			//2 times out of 47, an adjective will lead to a collective noun.
 			case 3:
-				return new CollectiveNoun("collectivenoun");
+				return new CollectiveNoun(getCollectiveNoun());
 			//6 times out of 47, an adjective will lead to the end of the name.
 			case 4:
 				return new NameEnd();
@@ -255,10 +255,10 @@ class TransitiveVerb {
 		switch (nextWord) {
 			//1 time out of 3, a transitive verb will lead to an article.
 			case 0:
-				return new Article("article");
+				return new Article(getArticle());
 			//2 times out of 3, a transitive verb will lead to an object.
 			case 1:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 		}
 	}
 }
@@ -274,10 +274,10 @@ class IntransitiveVerb {
 		switch (nextWord) {
 			//1 time out of 7, an intransitive verb will lead to an adverb.
 			case 0:
-				return new Adverb("adverb");
+				return new Adverb(getAdverb());
 			//5 times out of 7, an intransitive verb will lead to a preposition.
 			case 1:
-				return new Preposition("preposition");
+				return new Preposition(getPreposition());
 			//1 time out of 7, an intransitive verb will lead to the end of the name.
 			case 2:
 				return new NameEnd();
@@ -296,16 +296,16 @@ class Conjunction {
 		switch (nextWord) {
 			//10 times out of 15, a conjunction will lead to an article.
 			case 0:
-				return new Article("article");
+				return new Article(getArticle());
 			//3 times out of 15, a conjunction will lead to an object.
 			case 1:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//1 time out of 15, a conjunction will lead to an adjective.
 			case 2:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 15, a conjunction will lead to a first name.
 			case 3:
-				return new FirstName("firstname");
+				return new FirstName(getFirstName());
 		}
 	}
 }
@@ -321,10 +321,10 @@ class Adverb {
 		switch (nextWord) {
 			//2 times out of 3, an adverb will lead to an adjective.
 			case 0:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 3, an adverb will lead to a preposition.
 			case 1:
-				return new Preposition("preposition");
+				return new Preposition(getPreposition());
 		}
 	}
 }
@@ -340,7 +340,7 @@ class NameNumber {
 		switch (nextWord) {
 			//1 time out of 5, a number will lead to an object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//4 times out of 5, a number will lead to the end of the name.
 			case 1:
 				return new NameEnd();
@@ -359,25 +359,25 @@ class FirstName {
 		switch (nextWord) {
 			//4 times out of 27, a first name will lead to an object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//1 time out of 27, a first name will lead to an adjective.
 			case 1:
-				return new Adjective("adjective");
+				return new Adjective(getAdjective());
 			//1 time out of 27, a first name will lead to a transitive verb.
 			case 2:
-				return new TransitiveVerb("transitiveverb");
+				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 27, a first name will lead to an intransitive verb.
 			case 3:
-				return new IntransitiveVerb("intransitiveverb");
+				return new IntransitiveVerb(getinTransitiveVerb());
 			//6 times out of 27, a first name will lead to a conjunction.
 			case 4:
-				return new Conjunction("conjunction");
+				return new Conjunction(getConjunction());
 			//9 times out of 27, a first name will lead to a last name.
 			case 5:
-				return new LastName("lastname");
+				return new LastName(getLastName());
 			//1 time out of 27, a first name will lead to a collective noun.
 			case 6:
-				return new CollectiveNoun("collectivenoun");
+				return new CollectiveNoun(getCollectiveNoun());
 			//4 times out of 27, a first name will lead to the end of the name.
 			case 7:
 				return new NameEnd();
@@ -396,16 +396,16 @@ class LastName {
 		switch (nextWord) {
 			//2 times out of 16, a last name will lead to an object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//5 times out of 16, a last name will lead to a conjunction.
 			case 1:
-				return new Conjunction("conjunction");
+				return new Conjunction(getConjunction());
 			//1 time out of 16, a last name will lead to another last name.
 			case 2:
-				return new LastName("lastname");
+				return new LastName(getLastName());
 			//2 times out of 16, a last name will lead to a collective noun.
 			case 3:
-				return new CollectiveNoun("collectivenoun");
+				return new CollectiveNoun(getCollectiveNoun());
 			//6 times out of 16, a last name will lead to the end of the name.
 			case 4:
 				return new NameEnd();
@@ -424,16 +424,16 @@ class Place {
 		switch (nextWord) {
 			//8 times out of 34, a place will lead to an object.
 			case 0:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//1 time out of 34, a place will lead to a transitive verb.
 			case 1:
-				return new TransitiveVerb("transitiveverb");
+				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 34, a place will lead to a number.
 			case 2:
-				return new NameNumber("3.1416");
+				return new NameNumber(getNumber());
 			//2 times out of 34, a place will lead to a first name.
 			case 3:
-				return new FirstName("firstname");
+				return new FirstName(getFirstName());
 			//22 times out of 34, a place will lead to the end of the name.
 			case 4:
 				return new NameEnd();
@@ -452,13 +452,13 @@ class Preposition {
 		switch (nextWord) {
 			//3 times out of 14, a preposition will lead to an article.
 			case 0:
-				return new Article("article");
+				return new Article(getArticle());
 			//10 times out of 14, a preposition will lead to an object.
 			case 1:
-				return new NameObject("object");
+				return new NameObject(getNoun());
 			//1 time out of 14, a preposition will lead to a place
 			case 2:
-				return new Place("place");
+				return new Place(getPlace());
 		}
 	}
 }
@@ -474,13 +474,13 @@ class CollectiveNoun {
 		switch (nextWord) {
 			//1 time out of 32, a collective noun will be followed by a transitive verb.
 			case 0:
-				return new TransitiveVerb("transitiveverb");
+				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 32, a collective noun will be followed by an intransitive verb.
 			case 1:
-				return new IntransitiveVerb("intransitiveverb");
+				return new IntransitiveVerb(getinTransitiveVerb());
 			//3 times out of 32, a collective noun will be followed by a preposition.
 			case 2:
-				return new Preposition("preposition");
+				return new Preposition(getPreposition());
 			//27 times out of 32, a collective noun will be followed by the end of the name.
 			case 3:
 				return new NameEnd();
@@ -491,6 +491,7 @@ class CollectiveNoun {
 class NameEnd {
 	constructor() {
 		this.word = "";
+		this.isEnd = true;
 	}
 
 	getNext() {
@@ -501,56 +502,37 @@ class NameEnd {
 /**
  * Generates a random band name.
  *
- * The generator operates by taking a random noun and building off of it.
+ * The generator operates by repeatedly taking a random next path from the
+ * current word type in the Markov chain.
  *
  * @returns A randomly generated band name.
  */
 const generateName = () => {
+	//The name function 
 	let name = [];
 
-	//Get a random noun
-	name.push(getNoun());
-
-	//Modify it in random ways
-	while (true) {
-		let probability = Math.random();
-
-		if (probability < 0.1) {
-			//The modification process has a 10% chance of not doing anything.
-			break;
-		} else if (probability < 0.6) {
-			//The modification process has a 50% chance of adding an adjective.
-			//If it does, it repeats this loop.
-			name.unshift(getAdjective());
-			console.log(name);
-		} else {
-			//The modification process has a 40% chance of adding "the" and
-			//breaking.
-			name.unshift("The");
-
-			let lastNoun = name.findLastIndex(
-				(element) => element.wordType === "noun"
-			);
-			name[lastNoun] = name[lastNoun].plural;
-
-			console.log(name);
-
-			break;
-		}
+	let currentEntry = new NameStart();
+	//Add new word objects
+	while(!currentEntry.isEnd) {
+		currentEntry = currentEntry.getNext();
+		name.push(currentEntry);
 	}
 
 	//Concatenate the elements in name
 	return name.reduce((fullName, currentElement) => {
-		if (typeof currentElement === "string") {
-			return fullName + capitalize(currentElement) + " ";
-		} else if (currentElement.wordType === "noun") {
-			return fullName + capitalize(currentElement.singular) + " ";
-		} else {
-			return (
-				fullName +
-				capitalize(currentElement[currentElement.wordType]) +
-				" "
-			);
+		switch(currentElement.wordType) {
+			case "noun":
+				return fullName + capitalize(currentElement.singular) + " ";
+			case getinTransitiveVerb():
+				return fullName + capitalize(currentElement.present) + " ";
+			case getTransitiveVerb():
+				return fullName + capitalize(currentElement.present) + " ";
+			default:
+				return (
+					fullName +
+					capitalize(currentElement[currentElement.wordType]) +
+					" "
+				);
 		}
 	}, "");
 };
