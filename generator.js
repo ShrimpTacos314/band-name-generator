@@ -106,7 +106,7 @@ class NameStart {
 				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 143, the name start will lead to an intransitive verb.
 			case 5:
-				return new IntransitiveVerb(getinTransitiveVerb());
+				return new IntransitiveVerb(getIntransitiveVerb());
 			//2 times out of 143, the name start will lead to an adverb.
 			case 6:
 				return new Adverb(getAdverb());
@@ -180,7 +180,7 @@ class Subject {
 				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 3, a subject will lead to an intransitive verb.
 			case 1:
-				return new IntransitiveVerb(getinTransitiveVerb());
+				return new IntransitiveVerb(getIntransitiveVerb());
 		}
 	}
 }
@@ -368,7 +368,7 @@ class FirstName {
 				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 27, a first name will lead to an intransitive verb.
 			case 3:
-				return new IntransitiveVerb(getinTransitiveVerb());
+				return new IntransitiveVerb(getIntransitiveVerb());
 			//6 times out of 27, a first name will lead to a conjunction.
 			case 4:
 				return new Conjunction(getConjunction());
@@ -477,7 +477,7 @@ class CollectiveNoun {
 				return new TransitiveVerb(getTransitiveVerb());
 			//1 time out of 32, a collective noun will be followed by an intransitive verb.
 			case 1:
-				return new IntransitiveVerb(getinTransitiveVerb());
+				return new IntransitiveVerb(getIntransitiveVerb());
 			//3 times out of 32, a collective noun will be followed by a preposition.
 			case 2:
 				return new Preposition(getPreposition());
@@ -518,19 +518,23 @@ const generateName = () => {
 		name.push(currentEntry);
 	}
 
+	name.pop();
+
 	//Concatenate the elements in name
 	return name.reduce((fullName, currentElement) => {
-		switch(currentElement.wordType) {
+		switch(currentElement?.word?.wordType) {
+			case "article":
+				return fullName + capitalize(currentElement?.word?.consonant) + " ";
 			case "noun":
-				return fullName + capitalize(currentElement.singular) + " ";
-			case getinTransitiveVerb():
-				return fullName + capitalize(currentElement.present) + " ";
-			case getTransitiveVerb():
-				return fullName + capitalize(currentElement.present) + " ";
+				return fullName + capitalize(currentElement?.word?.singular) + " ";
+			case "transitiveVerb":
+				return fullName + capitalize(currentElement?.word?.present) + " ";
+			case "getIntransitiveVerb":
+				return fullName + capitalize(currentElement?.word?.present) + " ";
 			default:
 				return (
 					fullName +
-					capitalize(currentElement[currentElement.wordType]) +
+					capitalize(currentElement?.word?.[currentElement?.word?.wordType]) +
 					" "
 				);
 		}
