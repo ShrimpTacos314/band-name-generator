@@ -529,7 +529,7 @@ const generateName = () => {
 				return fullName + capitalize(currentElement?.word?.singular) + " ";
 			case "transitiveVerb":
 				return fullName + capitalize(currentElement?.word?.present) + " ";
-			case "getIntransitiveVerb":
+			case "intransitiveVerb":
 				return fullName + capitalize(currentElement?.word?.present) + " ";
 			default:
 				return (
